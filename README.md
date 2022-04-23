@@ -3,7 +3,7 @@ _________________________
 
 WARNING:
 Autoscript.exe is a small program made to convert PSCT from yugioh
-cards into a .lua file usable on project ignis Edopro. The Edopro team
+cards into a .lua file usable on Project Ignis: Edopro. The Edopro team
 is not associated with this project.
 
 
@@ -20,6 +20,7 @@ _____________________________________
 _____________________________________
 
 
-*note that this program will never output a perfect card, you still
+*Note that this program will never output a perfect card, you still
 have to manually fix any mistakes it left behind, it just makes
-the tedious parts that much faster.
+the tedious parts that much faster. For best results, give it only
+one effect at a time.

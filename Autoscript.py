@@ -17,7 +17,7 @@ function s.initial_effect(c)
 end
 <add condition>
 <add target>
-<add activate>
+<add operation>
 <add func>''')
 script.flush()
 script.close()
@@ -33,7 +33,7 @@ def Scriptit(psct):
     while convtuple[1] != "":
         convtuple = scriptranslate(psctcopy)
         # remove the scripted bit from the psct
-        psctcopy = psctcopy.replace(convtuple[0], "")
+        psctcopy = psctcopy.replace(convtuple[0], "",1)
         print(convtuple[0])
         
         # iterate over the replacements to do
@@ -42,7 +42,7 @@ def Scriptit(psct):
             with open('Output.lua', 'r') as file :
                 filedata = file.read()
             # Replace the target string
-            filedata = filedata.replace(convtuple[i-1], convtuple[i])
+            filedata = filedata.replace(convtuple[i-1], convtuple[i],1)
             # Write replacement in
             with open('Output.lua', 'w') as file:
                 file.write(filedata)

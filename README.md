@@ -9,7 +9,7 @@ _________________________
 
 
 List of expressions recognized so far:
-_____________________________________
+
 - once per turn:
 - " once per turn
 - target 

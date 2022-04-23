@@ -24,3 +24,5 @@ _____________________________________
 have to manually fix any mistakes it left behind, it just makes
 the tedious parts that much faster. For best results, give it only
 one effect at a time.
+
+Contact me on Discord at Zefile#5500 for any additional information.

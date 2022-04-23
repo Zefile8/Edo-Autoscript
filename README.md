@@ -2,7 +2,7 @@ README for Edo-Autoscript
 _________________________
 
 WARNING:
-Autoscript.exe is a small program made to convert PSCT from Yu-Gi-Oh
+Autoscript.exe is a small program made to convert PSCT from Yu-Gi-Oh!
 cards into a .lua file usable on Project Ignis: Edopro. The Edopro team
 is not associated with this project.
 _________________________

@@ -9,14 +9,14 @@ is not associated with this project.
 
 List of expressions recognized so far:
 _____________________________________
--once per turn:
--" once per turn
+- once per turn:
+- " once per turn
 - target 
 - destroy 
 - then 
--and if you do
+- and if you do
 - also 
--\(quick effect\):
+- (quick effect):
 _____________________________________
 
 

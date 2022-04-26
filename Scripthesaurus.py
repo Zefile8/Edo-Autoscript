@@ -11,7 +11,9 @@ also|
 \(quick effect\):|
 from your deck to your hand|
 except "|
+special summon|
     '''
+# next, add a bunch of FROMs
 cases_list = str(cases_list.replace('\n', ''))
 
 # a few templates used in many cases
@@ -58,6 +60,9 @@ def scriptranslate(psct):
         
         case 'except "':
             return(res[0],'<filter>','not c:IsCode(id) and <filter>','<add func>','s.listed_names={id}\n<add func>')
+            
+        case 'special summon':
+            return(res[0],'<add func>',base_filter,'<expand effect>',target_initial,'<add target>',base_target,'<expand effect>',operation_initial,'<add operation>',base_operation,'<expand effect>','e1:SetCategory(CATEGORY_SPECIAL_SUMMON)\n	<expand effect>','<edit target>','if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0\n		and Duel.IsExistingMatchingCard(s.filter,tp,<from>,0,1,nil,e,tp) end\n	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,<from>)\n	<edit target>','<edit operation>','if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end\n	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)\n	local g=Duel.SelectMatchingCard(tp,s.filter,tp,<from>,0,1,1,nil,e,tp)\n	local tc=g:GetFirst()\n	Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)\n	<edit operation>')
         
 # "return" structured as follow:
 # (case found, toreplace, replacement, toreplace, replacement,...)

@@ -20,6 +20,7 @@ List of expressions recognized so far:
 - (quick effect):
 - from your deck to your hand
 - except "
+- special summon
 _____________________________________
 
 

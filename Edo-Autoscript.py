@@ -33,25 +33,32 @@ def Scriptit(psct):
     # init needed vars
     psctcopy = psct
     psctcopy.lower()
-    convtuple = ("error", "tuple not changed", "")
+    convtuple = ("error", 100, "tuple not changed", "")
 
     # until scriptranslate is out of targets
-    while convtuple[1] != "":
+    while convtuple[1] != 0:
+        #find a scriptable bit of psct
         convtuple = scriptranslate(psctcopy)
-        # remove the scripted bit from the psct
+        #remove scriptable bit from psct
         psctcopy = psctcopy.replace(convtuple[0], "",1)
-        print(convtuple[0])
         
+        # stop scripting if an error is returned
+        if convtuple[0] == "error":
+            print(convtuple)
+            return
+
         # iterate over the replacements to do
-        for i in range(2, len(convtuple), 2):
+        print(convtuple[0])
+        for i in range(3, len(convtuple), 2):
             # select output
             with open(filename, 'r') as file :
                 filedata = file.read()
             # Replace the target string
-            filedata = filedata.replace(convtuple[i-1], convtuple[i],1)
+            filedata = filedata.replace(convtuple[i-1], convtuple[i], convtuple[1])
             # Write replacement in
             with open(filename, 'w') as file:
                 file.write(filedata)
+        
 
     # if psct has text left, print it
     if re.search('[a-z1-9]', psctcopy) is not None:

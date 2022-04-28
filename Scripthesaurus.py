@@ -3,6 +3,8 @@ import re
 cases_list = '''
 once per turn:|
 " once per turn|
+can only be activated once per turn|
+can only be used once per turn|
 target |
 destroy |
 then|
@@ -12,15 +14,21 @@ also|
 from your deck to your hand|
 except "|
 special summon|
-    '''
+you cannot special summon for the rest of this turn, except|
+'''
 # next, add a bunch of FROMs
 cases_list = str(cases_list.replace('\n', ''))
 
 # a few templates used in many cases
 base_target = 'function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)\n	<edit target>\nend'
 target_initial = 'e1:SetTarget(s.target)\n	<expand effect>'
+add_target = ('<expand effect>',target_initial,'<add condition>',base_target)
 base_operation = 'function s.operation(e,tp,eg,ep,ev,re,r,rp)\n	<edit operation>\nend'
 operation_initial = 'e1:SetTarget(s.operation)\n	<expand effect>'
+add_operation = ('<expand effect>',operation_initial,'<add condition>',base_operation)
+base_condition = 'function s.condition(e,tp,eg,ep,ev,re,r,rp)\n	<edit condition>\nend'
+condition_initial = 'e1:SetCondition(s.condition)\n	<expand effect>'
+add_condition = ('<expand effect>',condition_initial,'<add condition>',base_condition)
 base_filter = 'function s.filter(c)\n	return <filter>\nend\n<add func>'
 
 # func that finds the scriptable bit and returns the corresponding script
@@ -30,9 +38,19 @@ def scriptranslate(psct):
     if res is None:
         return ('All autoscripts done.','','')
     # find what option to autoscript
+    print(res)
     match res[0]:
         case '" once per turn':
             return (res[0],'<expand effect>','e1:SetCountLimit(1,{id,0})\n	<expand effect>')
+            
+        case 'can only be activated once per turn':
+            return (res[0],'<expand effect>','e1:SetCountLimit(1,{id,0})\n	<expand effect>')
+            
+        case 'can only be used once per turn':
+            return (res[0],'<expand effect>','e1:SetCountLimit(1,{id,0})\n	<expand effect>')
+            
+        case 'once per chain':
+            return (res[0])+add_condition+('<edit condition>','if e:GetHandler():IsStatus(STATUS_CHAINING) then return false end\n	<edit condition>')
             
         case 'once per turn:':
             return (res[0],'<expand effect>','e1:SetCountLimit(1)\n	<expand effect>','<edit settype>','EFFECT_TYPE_IGNITION','<edit setcode>','EVENT_FREE_CHAIN')
@@ -63,7 +81,11 @@ def scriptranslate(psct):
             
         case 'special summon':
             return(res[0],'<add func>',base_filter,'<expand effect>',target_initial,'<add target>',base_target,'<expand effect>',operation_initial,'<add operation>',base_operation,'<expand effect>','e1:SetCategory(CATEGORY_SPECIAL_SUMMON)\n	<expand effect>','<edit target>','if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0\n		and Duel.IsExistingMatchingCard(s.filter,tp,<from>,0,1,nil,e,tp) end\n	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,<from>)\n	<edit target>','<edit operation>','if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end\n	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)\n	local g=Duel.SelectMatchingCard(tp,s.filter,tp,<from>,0,1,1,nil,e,tp)\n	local tc=g:GetFirst()\n	Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)\n	<edit operation>')
-        
+            
+        case 'you cannot special summon for the rest of this turn, except':
+            ret = (res[0])+add_operation+('<edit operation>','local e1=Effect.CreateEffect(c)\n	e1:SetDescription(aux.Stringid(id,2))\n	e1:SetType(EFFECT_TYPE_FIELD)\n	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)\n	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)\n	e1:SetTargetRange(1,0)\n	e1:SetTarget(s.splimit)\n	e1:SetReset(RESET_PHASE+PHASE_END)\n	Duel.RegisterEffect(e1,tp)\n	<edit operation>','<add func>','function s.splimit(e,c)\n	return not <filter>\nend\n<add func>')
+            print('RET IS HERE:')
+            print(ret)
 # "return" structured as follow:
 # (case found, toreplace, replacement, toreplace, replacement,...)
 # as many replacements as you want (executed from left to right)

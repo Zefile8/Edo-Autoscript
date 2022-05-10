@@ -7,6 +7,8 @@ can only be activated once per turn|
 can only be used once per turn|
 target |
 destroy |
+banish |
+excavate|
 then|
 and if you do|
 also|
@@ -24,8 +26,7 @@ draw|
 6 |
 7 |
 8 |
-9 |
-    '''
+9 '''
 # next, add a bunch of FROMs
 cases_list = str(cases_list.replace('\n', ''))
 
@@ -69,6 +70,12 @@ def scriptranslate(psct):
         
         case 'destroy ':
             return (res[0],1)+add_target+add_operation+('<edit target>','<edit target>\n	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)','<edit operation>','Duel.Destroy(tc,REASON_EFFECT)\n	<edit operation>','<hint>','HINTMSG_DESTROY')
+        
+        case 'banish ':
+            return (res[0],1)+add_target+add_operation+('<edit target>','<edit target>\n	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)','<edit operation>','Duel.Remove(tc,REASON_EFFECT)\n	<edit operation>','<hint>','HINTMSG_REMOVE')
+        
+        case 'excavate':
+            return (res[0],1)+add_operation+('<edit operation>','Duel.ConfirmDecktop(tp,<amount>)\n	local g=Duel.GetDecktopGroup(tp,<amount>):Filter(s.filter,nil,e,tp)\n	Duel.ShuffleDeck(tp)\n	<edit operation>')
         
         case 'then':
             return (res[0],1)+add_operation+('<edit operation>','if <condition first part effect>\n		Duel.BreakEffect()\n		<edit operation>\n	end')

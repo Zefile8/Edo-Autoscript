@@ -12,15 +12,32 @@ List of expressions recognized so far:
 
 - once per turn:
 - " once per turn
+- can only be activated once per turn
+- can only be used once per turn
 - target 
 - destroy 
+- banish 
+- excavate
 - then
 - and if you do
 - also
 - (quick effect):
 - from your deck to your hand
 - except "
-- special summon
+- special summon 
+- you cannot special summon for the rest of this turn, except
+- draw
+- cannot be normal summoned
+- must be special summoned by its own effect
+- must be special summoned by a card effect
+- must first be special summoned by
+- must first be special summoned by its own effect
+- <contemp> (adds the template condition func)
+- <targettemp> (adds the template target func)
+- <opertemp> (adds the template operation func)
+- 1 
+...
+- 9 (to use with draw, excavate or special summon)
 _____________________________________
 
 

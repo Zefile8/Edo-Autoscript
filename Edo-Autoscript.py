@@ -12,6 +12,7 @@ while os.path.isfile(filename):
     i += 1
 script = open(filename,"w+")
 script.write('''--<Card Name>
+--<Card Name>
 --Edo Autoscript written by Zefile#5500
 local s,id = GetID()
 function s.initial_effect(c)
@@ -20,6 +21,7 @@ function s.initial_effect(c)
 	e1:SetCode(<edit setcode>)
 	<expand effect>
 	c:RegisterEffect(e1)
+    <expand initial>
 end
 <add condition>
 <add target>

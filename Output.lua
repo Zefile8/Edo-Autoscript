@@ -7,6 +7,7 @@ function s.initial_effect(c)
 	e1:SetCode(<edit setcode>)
 	<expand effect>
 	c:RegisterEffect(e1)
+    <expand initial>
 end
 <add condition>
 <add target>

@@ -15,9 +15,14 @@ also|
 \(quick effect\):|
 from your deck to your hand|
 except "|
-special summon|
+special summon |
 you cannot special summon for the rest of this turn, except|
 draw|
+cannot be normal summoned|
+must be special summoned by its own effect|
+must be special summoned by a card effect|
+must first be special summoned by|
+must first be special summoned by its own effect|
 1 |
 2 |
 3 |
@@ -50,6 +55,19 @@ def scriptranslate(psct):
         return ('All autoscripts done.',0,'','')
     # find what option to autoscript
     match res[0]:
+    
+        case ('cannot be normal summoned'):
+            return (res[0],1,'<expand initial>','c:EnableReviveLimit()\n	<expand effect>')
+        
+        case ('must be special summoned by its own effect'):
+            return (res[0],1,'<expand initial>','--Special Summon Restriction\n	local e2=Effect.CreateEffect(c)\n	e2:SetType(EFFECT_TYPE_SINGLE)\n	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)\n	e2:SetCode(EFFECT_SPSUMMON_CONDITION)\n	e2:SetValue(aux.FALSE)\n	c:RegisterEffect(e2)\n	<expand initial>','<expand effect>','e1:SetCategory(CATEGORY_SPECIAL_SUMMON)\n	e1:SetRange(<range>)\n	<expand effect>')+add_operation+('<edit operation>','local c=e:GetHandler()\n	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)>0 then\n		c:CompleteProcedure()\n	end\n	<edit operation>')
+        
+        case ('must be special summoned by a card effect'):
+            return (res[0],1,'<edit settype>','EFFECT_TYPE_SINGLE','<edit setcode>','EFFECT_SPSUMMON_CONDITION','<expand effect>','e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)\n	e1:SetValue(s.splimit)\n	<expand effect>','<add func>','function s.splimit(e,se,sp,st)\n	return se:IsHasType(EFFECT_TYPE_ACTIONS)\nend\n<add func>')
+        
+        case ('must first be special summoned by'):
+            return (res[0],1,'<expand effect>','e1:SetCategory(CATEGORY_SPECIAL_SUMMON)\n	e1:SetRange(<range>)\n	<expand effect>')+add_operation+('<edit operation>','local c=e:GetHandler()\n	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)>0 then\n		c:CompleteProcedure()\n	end\n	<edit operation>')
+        
         case '" once per turn':
             return (res[0],1,'<expand effect>','e1:SetCountLimit(1,{id,0})\n	<expand effect>')
         

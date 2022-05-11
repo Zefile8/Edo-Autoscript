@@ -113,7 +113,7 @@ def scriptranslate(psct):
         case 'except "':
             return (res[0],1,'<filter>','not c:IsCode(id) and <filter>','<add func>','s.listed_names={id}\n<add func>')
         
-        case 'special summon':
+        case 'special summon ':
             return (res[0],1,'<add func>',base_filter)+add_target+add_operation+('<expand effect>','e1:SetCategory(CATEGORY_SPECIAL_SUMMON)\n	<expand effect>','<edit target>','if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0\n		and Duel.IsExistingMatchingCard(s.filter,tp,<from>,0,1,nil,e,tp) end\n	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,<from>)\n	<edit target>','<edit operation>','if Duel.GetLocationCount(tp,LOCATION_MZONE)<<amount> then return end\n	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)\n	local g=Duel.SelectMatchingCard(tp,s.filter,tp,<from>,0,1,<amount>,nil,e,tp)\n	if #g>Duel.GetLocationCount(tp,LOCATION_MZONE) then\n	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)\n	<edit operation>')
         
         case 'you cannot special summon for the rest of this turn, except':

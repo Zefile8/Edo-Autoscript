@@ -15,14 +15,17 @@ also|
 \(quick effect\):|
 from your deck to your hand|
 except "|
-special summon |
 you cannot special summon for the rest of this turn, except|
-draw|
+special summon |
+draw |
 cannot be normal summoned|
 must be special summoned by its own effect|
 must be special summoned by a card effect|
 must first be special summoned by|
 must first be special summoned by its own effect|
+<contemp>|
+<targettemp>|
+<opertemp>|
 1 |
 2 |
 3 |
@@ -113,14 +116,23 @@ def scriptranslate(psct):
         case 'except "':
             return (res[0],1,'<filter>','not c:IsCode(id) and <filter>','<add func>','s.listed_names={id}\n<add func>')
         
-        case 'special summon ':
-            return (res[0],1,'<add func>',base_filter)+add_target+add_operation+('<expand effect>','e1:SetCategory(CATEGORY_SPECIAL_SUMMON)\n	<expand effect>','<edit target>','if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0\n		and Duel.IsExistingMatchingCard(s.filter,tp,<from>,0,1,nil,e,tp) end\n	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,<from>)\n	<edit target>','<edit operation>','if Duel.GetLocationCount(tp,LOCATION_MZONE)<<amount> then return end\n	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)\n	local g=Duel.SelectMatchingCard(tp,s.filter,tp,<from>,0,1,<amount>,nil,e,tp)\n	if #g>Duel.GetLocationCount(tp,LOCATION_MZONE) then\n	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)\n	<edit operation>')
-        
         case 'you cannot special summon for the rest of this turn, except':
             return (res[0],1)+add_operation+('<edit operation>','local e1=Effect.CreateEffect(c)\n	e1:SetDescription(aux.Stringid(id,2))\n	e1:SetType(EFFECT_TYPE_FIELD)\n	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)\n	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)\n	e1:SetTargetRange(1,0)\n	e1:SetTarget(s.splimit)\n	e1:SetReset(RESET_PHASE+PHASE_END)\n	Duel.RegisterEffect(e1,tp)\n	<edit operation>','<add func>','function s.splimit(e,c)\n	return not <filter>\nend\n<add func>')
         
+        case 'special summon ':
+            return (res[0],1,'<add func>',base_filter)+add_target+add_operation+('<expand effect>','e1:SetCategory(CATEGORY_SPECIAL_SUMMON)\n	<expand effect>','<edit target>','if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0\n		and Duel.IsExistingMatchingCard(s.filter,tp,<from>,0,1,nil,e,tp) end\n	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,<from>)\n	<edit target>','<edit operation>','if Duel.GetLocationCount(tp,LOCATION_MZONE)<<amount> then return end\n	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)\n	local g=Duel.SelectMatchingCard(tp,s.filter,tp,<from>,0,1,<amount>,nil,e,tp)\n	if #g>Duel.GetLocationCount(tp,LOCATION_MZONE) then\n	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)\n	<edit operation>')
+        
         case 'draw':
             return (res[0],1,'<expand effect>','e1:SetCategory(CATEGORY_DRAW)\n	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)\n	<expand effect>')+add_target+add_operation+('<edit target>','if chk==0 then return Duel.IsPlayerCanDraw(tp,<amount>) end\n	Duel.SetTargetPlayer(tp)\n	Duel.SetTargetParam(<amount>)\n	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)\n	<edit target>','<edit operation>','local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)\n	Duel.Draw(p,d,REASON_EFFECT)\n	<edit operation>')
+        
+        case '<contemp>':
+            return (res[0],1)+add_condition
+        
+        case '<targettemp>':
+            return (res[0],1)+add_target
+        
+        case '<opertemp>':
+            return (res[0],1)+add_operation
         
         case '1 ':
             return (res[0],99,'<amount>','1')

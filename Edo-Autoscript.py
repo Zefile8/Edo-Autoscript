@@ -34,7 +34,7 @@ script.close()
 def Scriptit(psct):
     # init needed vars
     psctcopy = psct
-    psctcopy.lower()
+    psctcopy = psctcopy.lower()
     convtuple = ("error", 100, "tuple not changed", "")
 
     # until scriptranslate is out of targets

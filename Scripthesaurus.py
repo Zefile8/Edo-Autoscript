@@ -122,7 +122,7 @@ def scriptranslate(psct):
         case 'special summon ':
             return (res[0],1,'<add func>',base_filter)+add_target+add_operation+('<expand effect>','e1:SetCategory(CATEGORY_SPECIAL_SUMMON)\n	<expand effect>','<edit target>','if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0\n		and Duel.IsExistingMatchingCard(s.filter,tp,<from>,0,1,nil,e,tp) end\n	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,<from>)\n	<edit target>','<edit operation>','if Duel.GetLocationCount(tp,LOCATION_MZONE)<<amount> then return end\n	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)\n	local g=Duel.SelectMatchingCard(tp,s.filter,tp,<from>,0,1,<amount>,nil,e,tp)\n	if #g>Duel.GetLocationCount(tp,LOCATION_MZONE) then\n	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)\n	<edit operation>')
         
-        case 'draw':
+        case 'draw ':
             return (res[0],1,'<expand effect>','e1:SetCategory(CATEGORY_DRAW)\n	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)\n	<expand effect>')+add_target+add_operation+('<edit target>','if chk==0 then return Duel.IsPlayerCanDraw(tp,<amount>) end\n	Duel.SetTargetPlayer(tp)\n	Duel.SetTargetParam(<amount>)\n	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)\n	<edit target>','<edit operation>','local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)\n	Duel.Draw(p,d,REASON_EFFECT)\n	<edit operation>')
         
         case '<contemp>':
